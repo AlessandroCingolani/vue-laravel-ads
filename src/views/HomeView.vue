@@ -1,18 +1,22 @@
+<script>
+import axios from "axios";
+export default {
+  name: "HomeView",
+  methods: {
+    getAds() {
+      axios.get("http://127.0.0.1:8000/api/ads").then((response) => {
+        console.log(response);
+      });
+    },
+  },
+  mounted() {
+    this.getAds();
+  },
+};
+</script>
+
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <h1>Home</h1>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
-export default {
-  name: 'HomeView',
-  components: {
-    HelloWorld
-  }
-}
-</script>
+<style lang="scss" scoped></style>
