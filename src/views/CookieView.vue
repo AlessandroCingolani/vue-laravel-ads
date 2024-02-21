@@ -5,7 +5,7 @@ export default {
   methods: {
     getAds() {
       axios.get("http://127.0.0.1:8000/api/ads").then((response) => {
-        console.log(response);
+        console.log(response.data.ads);
       });
     },
   },
