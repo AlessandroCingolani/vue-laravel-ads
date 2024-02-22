@@ -13,10 +13,30 @@ export default {
     closeModal() {
       let ads = document.getElementById("ads");
       ads.style.display = "none";
+      let now = new Date();
+
+      // Calcola la data di scadenza aggiungendo un minuto alla data corrente
+      let expires = new Date(now.getTime() + 60000); // 60000 millisecondi corrispondono a 1 minuto
+
+      // Formatta la data di scadenza nel formato corretto per i cookie
+      let expiresString = expires.toUTCString();
+      document.cookie = `bannerCookieClosed=true;expires=${expiresString}; path=Percorso`;
     },
     priceDiscount(price, discount) {
       return price - (price * discount) / 100;
     },
+  },
+  mounted() {
+    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+    // Search with for of cookie and when find break the loop
+    for (const cookie of cookies) {
+      const [name, value] = cookie.split("=");
+      if (name === "bannerCookieClosed") {
+        this.bannerCookieClosed = value;
+        console.log(this.bannerCookieClosed);
+        break;
+      }
+    }
   },
 };
 </script>
@@ -33,41 +53,45 @@ export default {
   <button type="button" class="ac_btn">VEDI I PIANI</button>
 
   <!-- Modal -->
-  <div
-    v-if="!bannerCookieClosed"
-    id="ads"
-    class="modal show"
-    tabindex="-1"
-    role="dialog"
-    style="display: block"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header justify-content-center">
-          <span class="">Pubblicità</span>
-          <span class="close-modal" @click="closeModal()">x</span>
-        </div>
-        <div class="modal-body">
-          <div class="d-flex flex-column align-items-center">
-            <h3>
-              ${{
-                priceDiscount(store.ads.price, store.ads.discount).toFixed(2)
-              }}
-            </h3>
-            <span><small>per month</small></span>
-            <div class="info">
-              <h6>Includes</h6>
-              <ul>
-                <li>
-                  A Spotify Premium subscription (Ad free, listen offline)
-                </li>
-                <li>No data charges for music listening on Spotify Premium</li>
-                <li>12-month contract applies</li>
-              </ul>
-            </div>
-            <button class="btn btn-danger">Subscribe</button>
-            <div class="full-price">
-              Or ${{ store.ads.price }} month without contract
+  <div v-if="store.isLoad && !bannerCookieClosed">
+    <div
+      v-if="!bannerCookieClosed"
+      id="ads"
+      class="modal show"
+      tabindex="-1"
+      role="dialog"
+      style="display: block"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <span class="">Pubblicità</span>
+            <span class="close-modal" @click="closeModal()">x</span>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex flex-column align-items-center">
+              <h3>
+                ${{
+                  priceDiscount(store.ads.price, store.ads.discount).toFixed(2)
+                }}
+              </h3>
+              <span><small>per month</small></span>
+              <div class="info">
+                <h6>Includes</h6>
+                <ul>
+                  <li>
+                    A Spotify Premium subscription (Ad free, listen offline)
+                  </li>
+                  <li>
+                    No data charges for music listening on Spotify Premium
+                  </li>
+                  <li>12-month contract applies</li>
+                </ul>
+              </div>
+              <button class="btn btn-danger">Subscribe</button>
+              <div class="full-price">
+                Or ${{ store.ads.price }} month without contract
+              </div>
             </div>
           </div>
         </div>
