@@ -1,16 +1,18 @@
 <script>
 import { store } from "../../data/store";
+// import axios from "axios";
 export default {
   name: "AdsView",
   data() {
     return {
       store,
+      bannerCookieClosed: false,
     };
   },
   methods: {
     closeModal() {
-      console.log("close");
-      // let ads = document.getElementById("ads");
+      let ads = document.getElementById("ads");
+      ads.style.display = "none";
     },
     priceDiscount(price, discount) {
       return price - (price * discount) / 100;
@@ -32,7 +34,7 @@ export default {
 
   <!-- Modal -->
   <div
-    v-if="store.isLoad"
+    v-if="!bannerCookieClosed"
     id="ads"
     class="modal show"
     tabindex="-1"
