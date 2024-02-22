@@ -1,9 +1,28 @@
 <script>
+import axios from "axios";
+import { store } from "../src/data/store";
 import HeaderView from "./components/HeaderView.vue";
 export default {
   name: "App",
   components: {
     HeaderView,
+  },
+  data() {
+    return {
+      store,
+    };
+  },
+  methods: {
+    getAds() {
+      store.isLoad = false;
+      axios.get("http://127.0.0.1:8000/api/ads").then((response) => {
+        store.ads = response.data.ads;
+        store.isLoad = true;
+      });
+    },
+  },
+  mounted() {
+    this.getAds();
   },
 };
 </script>
