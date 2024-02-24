@@ -1,6 +1,6 @@
 <script>
 import { store } from "../../data/store";
-import axios from "axios";
+// import axios from "axios";
 export default {
   name: "AdsView",
   data() {
@@ -14,65 +14,64 @@ export default {
     closeModal() {
       let ads = document.getElementById("ads");
       ads.style.display = "none";
-      this.inviaValoreAlBackend();
-      // let now = new Date();
+      // this.inviaValoreAlBackend();
+      let now = new Date();
 
-      // // Calcola la data di scadenza aggiungendo un minuto alla data corrente
-      // let expires = new Date(now.getTime() + 60000); // 60000 millisecondi corrispondono a 1 minuto
+      // Calcola la data di scadenza aggiungendo un minuto alla data corrente
+      let expires = new Date(now.getTime() + 60000); // 60000 millisecondi corrispondono a 1 minuto
 
-      // // Formatta la data di scadenza nel formato corretto per i cookie
-      // let expiresString = expires.toUTCString();
-      // document.cookie = `bannerCookieClosed=true;expires=${expiresString}; path=Percorso`;
+      // Formatta la data di scadenza nel formato corretto per i cookie
+      let expiresString = expires.toUTCString();
+      document.cookie = `bannerCookieClosed=true;expires=${expiresString}; path=Percorso`;
     },
     priceDiscount(price, discount) {
       return price - (price * discount) / 100;
     },
-    inviaValoreAlBackend() {
-      const valore = true;
-      axios
-        .post("http://127.0.0.1:8000/api/salva-valore-in-sessione", {
-          valore,
-          withCredentials: true,
-        })
-        .then((response) => {
-          console.log(response.data);
-          this.bannerCookieClosed = true;
-        })
-        .catch((error) => {
-          console.error("Errore durante la richiesta al backend:", error);
-        });
-    },
-    checkSession() {
-      axios
-        .get("http://127.0.0.1:8000/api/get-session", {
-          withCredentials: true,
-        })
-        .then((response) => {
-          // Gestisci la risposta dal backend
-          console.log(response.data.valore);
-          this.token = response.data.valore._token;
-          localStorage.setItem("session_token", this.token);
-          console.log(this.token);
-        })
-        .catch((error) => {
-          // Gestisci gli errori
-          console.error("Errore durante la richiesta:", error);
-        });
-    },
+    // inviaValoreAlBackend() {
+    //   const valore = true;
+    //   axios
+    //     .post("http://127.0.0.1:8000/api/salva-valore-in-sessione", {
+    //       valore,
+    //       withCredentials: true,
+    //     })
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       this.bannerCookieClosed = true;
+    //     })
+    //     .catch((error) => {
+    //       console.error("Errore durante la richiesta al backend:", error);
+    //     });
+    // },
+    // checkSession() {
+    //   axios
+    //     .get("http://127.0.0.1:8000/api/get-session", {
+    //       withCredentials: true,
+    //     })
+    //     .then((response) => {
+    //       // Gestisci la risposta dal backend
+    //       console.log(response.data.valore);
+    //       this.token = response.data.valore._token;
+    //       localStorage.setItem("session_token", this.token);
+    //       console.log(this.token);
+    //     })
+    //     .catch((error) => {
+    //       // Gestisci gli errori
+    //       console.error("Errore durante la richiesta:", error);
+    //     });
+    // },
   },
   mounted() {
-    // Cookie
-    // const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
-    // // Search with for of cookie and when find break the loop
-    // for (const cookie of cookies) {
-    //   const [name, value] = cookie.split("=");
-    //   if (name === "bannerCookieClosed") {
-    //     this.bannerCookieClosed = value;
-    //     console.log(this.bannerCookieClosed);
-    //     break;
-    //   }
-    // }
-    this.checkSession();
+    const cookies = document.cookie.split(";").map((cookie) => cookie.trim());
+    // Search with for of cookie and when find break the loop
+    for (const cookie of cookies) {
+      const [name, value] = cookie.split("=");
+      if (name === "bannerCookieClosed") {
+        this.bannerCookieClosed = value;
+        console.log(this.bannerCookieClosed);
+        break;
+      }
+    }
+    // this.checkSession();
   },
 };
 </script>
